@@ -1,8 +1,8 @@
 # ElevenLabs React Native iOS repro
 
-- run_id: 25873215218
-- commit: ce278bfa7e292e3f3407312cd26ca0dca9964cd6
-- date_utc: 2026-05-14T17:01:05Z
+- run_id: 25885188115
+- commit: a4697b3afb94ad66876f048fc08b135c648eaeaf
+- date_utc: 2026-05-14T21:33:14Z
 
 ## Package versions
 expo-repro@1.0.0 /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner
@@ -17,11 +17,35 @@ Starting Metro Bundler
 warning: Bundler cache is empty, rebuilding (this may take a minute)
 Waiting on http://localhost:8081
 Logs for your project will appear below.
+iOS ./index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.js ░░░░░░░░░░░░░░░░  1.0% (1/1)
+ WARN  Attempted to import the module "/Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/node_modules/@elevenlabs/client/dist/utils/input.js" which is not listed in the "exports" of "/Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/node_modules/@elevenlabs/client" under the requested subpath "./dist/utils/input.js". Falling back to file-based resolution. Consider updating the call site or asking the package maintainer(s) to expose this API.
+ WARN  Attempted to import the module "/Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/node_modules/@elevenlabs/client/dist/utils/output.js" which is not listed in the "exports" of "/Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/node_modules/@elevenlabs/client" under the requested subpath "./dist/utils/output.js". Falling back to file-based resolution. Consider updating the call site or asking the package maintainer(s) to expose this API.
+iOS ./index.js ▓▓░░░░░░░░░░░░░░ 16.0% ( 7/31)
+ WARN  The package /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/node_modules/@livekit/react-native contains an invalid package.json configuration. Consider raising this issue with the package maintainer(s).
+Reason: The resolution for "/Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/node_modules/@livekit/react-native" defined in "exports" is /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/node_modules/@livekit/react-native/lib/commonjs/index, however this file does not exist. Falling back to file-based resolution.
+iOS ./index.js ▓▓▓░░░░░░░░░░░░░ 20.5% (108/252)
+iOS ./index.js ▓▓▓▓▓▓░░░░░░░░░░ 37.6% (325/549)
+iOS ./index.js ▓▓▓▓▓▓░░░░░░░░░░ 42.4% (368/565)
+iOS ./index.js ▓▓▓▓▓▓▓▓░░░░░░░░ 52.6% (428/590)
+iOS ./index.js ▓▓▓▓▓▓▓▓▓▓░░░░░░ 68.6% (545/658)
+iOS ./index.js ▓▓▓▓▓▓▓▓▓▓▓▓░░░░ 78.1% (655/749)
+iOS Bundled 39105ms index.js (971 modules)
+ LOG  [EL_REPRO] 2026-05-14T21:02:30.454Z start direct media path
+ LOG  [EL_REPRO] 2026-05-14T21:02:30.458Z direct media path failed navigator.mediaDevices.getSupportedConstraints is not a function (it is undefined)
+ LOG  [EL_REPRO] 2026-05-14T21:02:30.458Z direct media path stack TypeError: navigator.mediaDevices.getSupportedConstraints is not a function (it is undefined) |     at ?anon_0_ (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&excludeSource=true&sourcePaths=url-server&app=com.anonymous.exporepro&transform.routerRoot=app&transform.engine=hermes&transform.bytecode=1&unstable_transformProfile=hermes-stable:173872:94) |     at next (native) |     at asyncGeneratorStep (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&excludeSource=true&sourcePaths=url-server&app=com.anonymous.exporepro&transform.routerRoot=app&transform.engine=hermes&transform.bytecode=1&unstable_transformProfile=hermes-stable:11736:19) |     at _next (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&excludeSource=true&sourcePaths=url-server&app=com.anonymous.exporepro&transform.routerRoot=app&transform.engine=hermes&transform.bytecode=1&unstable_transformProfile=hermes-stable:11750:29) |     at anonymous (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&excludeSource=true&sourcePaths=url-server&app=com.anonymous.exporepro&transform.routerRoot=app&transform.engine=hermes&transform.bytecode=1&unstable_transformProfile=hermes-stable:11755:14)
 
 ## Repro WebSocket excerpt
 [REPRO_WS] listening ws://127.0.0.1:8799
 
 ## Simulator excerpt
+getpwuid_r did not find a match for uid 501
+Filtering the log data using "composedMessage CONTAINS "[EL_REPRO]" OR composedMessage CONTAINS "AudioContext" OR composedMessage CONTAINS "navigator.mediaDevices" OR composedMessage CONTAINS "document.createElement" OR composedMessage CONTAINS "window.removeEventListener""
+
+## App launch excerpt
+2026-05-14 21:01:48.100 exporepro[14123:45787] You've implemented -[<UIApplicationDelegate> application:performFetchWithCompletionHandler:], but you still need to add "fetch" to the list of your supported UIBackgroundModes in your Info.plist.
+2026-05-14 21:01:48.100 exporepro[14123:45787] You've implemented -[<UIApplicationDelegate> application:didReceiveRemoteNotification:fetchCompletionHandler:], but you still need to add "remote-notification" to the list of your supported UIBackgroundModes in your Info.plist.
+2026-05-14 21:01:48.101 exporepro[14123:45787] _setUpFeatureFlags called with release level 2
 
 ## Native build tail
 ReactNativeDependencies.framework/ReactNativeDependencies_folly.bundle/PrivacyInfo.xcprivacy
@@ -43,7 +67,7 @@ ReactNativeDependencies.framework/ReactNativeDependencies_glog.bundle/_CodeSigna
 ReactNativeDependencies.framework/_CodeSignature/
 ReactNativeDependencies.framework/_CodeSignature/CodeResources
 
-sent 7342575 bytes  received 596 bytes  34138405 bytes/sec
+sent 7342575 bytes  received 596 bytes  82414938 bytes/sec
 total size is 7336858  speedup is 1.00
 Stripped /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Frameworks/ReactNativeDependencies.framework/ReactNativeDependencies of architectures: x86_64
 rsync --delete -av --filter P .*.?????? --links --filter "- CVS/" --filter "- .svn/" --filter "- .git/" --filter "- .hg/" --filter "- Headers" --filter "- PrivateHeaders" --filter "- Modules" "/Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/XCFrameworkIntermediates/WebRTC-SDK/WebRTC.framework" "/Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Frameworks"
@@ -53,7 +77,7 @@ WebRTC.framework/Info.plist
 WebRTC.framework/PrivacyInfo.xcprivacy
 WebRTC.framework/WebRTC
 
-sent 27084294 bytes  received 92 bytes  72398786 bytes/sec
+sent 27084294 bytes  received 92 bytes  98812061 bytes/sec
 total size is 27080485  speedup is 1.00
 Stripped /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Frameworks/WebRTC.framework/WebRTC of architectures: x86_64
 rsync --delete -av --filter P .*.?????? --links --filter "- CVS/" --filter "- .svn/" --filter "- .git/" --filter "- .hg/" --filter "- Headers" --filter "- PrivateHeaders" --filter "- Modules" "/Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/XCFrameworkIntermediates/hermes-engine/Pre-built/hermes.framework" "/Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Frameworks"
@@ -62,26 +86,26 @@ hermes.framework/
 hermes.framework/Info.plist
 hermes.framework/hermes
 
-sent 13803626 bytes  received 70 bytes  80676189 bytes/sec
+sent 13803626 bytes  received 70 bytes  104494292 bytes/sec
 total size is 13801546  speedup is 1.00
 Stripped /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Frameworks/hermes.framework/hermes of architectures: x86_64
+
+ExtractAppIntentsMetadata (in target 'exporepro' from project 'exporepro')
+    cd /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name exporepro --sdk-root /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk --xcode-version 16F6 --platform-family iOS --deployment-target 15.1 --bundle-identifier com.anonymous.exporepro --output /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app --target-triple arm64-apple-ios15.1-simulator --binary-file /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/exporepro --dependency-file /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/Objects-normal/arm64/exporepro_dependency_info.dat --stringsdata-file /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/Objects-normal/arm64/exporepro.SwiftFileList --metadata-file-list /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/exporepro.DependencyMetadataFileList --static-metadata-file-list /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/exporepro.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/Objects-normal/arm64/exporepro.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2026-05-14 20:59:19.217 appintentsmetadataprocessor[11461:36958] Starting appintentsmetadataprocessor export
+2026-05-14 20:59:19.221 appintentsmetadataprocessor[11461:36958] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
 
 CopySwiftLibs /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app (in target 'exporepro' from project 'exporepro')
     cd /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/ios
     builtin-swiftStdLibTool --copy --verbose --scan-executable /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/exporepro.debug.dylib --scan-folder /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Frameworks --scan-folder /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/PlugIns --scan-folder /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/SystemExtensions --scan-folder /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Extensions --platform iphonesimulator --toolchain /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
 Ignoring --strip-bitcode because --sign was not passed
 
-ExtractAppIntentsMetadata (in target 'exporepro' from project 'exporepro')
-    cd /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/ios
-    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name exporepro --sdk-root /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk --xcode-version 16F6 --platform-family iOS --deployment-target 15.1 --bundle-identifier com.anonymous.exporepro --output /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app --target-triple arm64-apple-ios15.1-simulator --binary-file /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/exporepro --dependency-file /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/Objects-normal/arm64/exporepro_dependency_info.dat --stringsdata-file /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/Objects-normal/arm64/exporepro.SwiftFileList --metadata-file-list /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/exporepro.DependencyMetadataFileList --static-metadata-file-list /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/exporepro.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/Objects-normal/arm64/exporepro.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
-2026-05-14 16:58:58.349 appintentsmetadataprocessor[12565:39430] Starting appintentsmetadataprocessor export
-2026-05-14 16:58:58.365 appintentsmetadataprocessor[12565:39430] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
-
 AppIntentsSSUTraining (in target 'exporepro' from project 'exporepro')
     cd /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/ios
     /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Info.plist --temp-dir-path /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/ssu --bundle-id com.anonymous.exporepro --product-path /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app --extracted-metadata-path /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app/Metadata.appintents --metadata-file-list /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Intermediates.noindex/exporepro.build/Debug-iphonesimulator/exporepro.build/exporepro.DependencyMetadataFileList --archive-ssu-assets
-2026-05-14 16:58:58.445 appintentsnltrainingprocessor[12566:39432] Parsing options for appintentsnltrainingprocessor
-2026-05-14 16:58:58.456 appintentsnltrainingprocessor[12566:39432] No AppShortcuts found - Skipping.
+2026-05-14 20:59:19.268 appintentsnltrainingprocessor[11462:36959] Parsing options for appintentsnltrainingprocessor
+2026-05-14 20:59:19.270 appintentsnltrainingprocessor[11462:36959] No AppShortcuts found - Skipping.
 
 RegisterExecutionPolicyException /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/build/Build/Products/Debug-iphonesimulator/exporepro.app (in target 'exporepro' from project 'exporepro')
     cd /Users/runner/work/elevenlabs-rn-repro-runner/elevenlabs-rn-repro-runner/ios
