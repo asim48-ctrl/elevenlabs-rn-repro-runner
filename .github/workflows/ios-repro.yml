@@ -58,6 +58,14 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build | tee xcodebuild.log
 
+      - name: Start Metro
+        run: |
+          set -euxo pipefail
+          nohup npx expo start --localhost --clear > metro.log 2>&1 &
+          echo $! > metro.pid
+          sleep 20
+          sed -n '1,160p' metro.log
+
       - name: Boot simulator and launch repro app
         run: |
           set -euxo pipefail
@@ -69,7 +77,8 @@ jobs:
           echo "Installing ${APP_PATH}"
           xcrun simctl install "$UDID" "$APP_PATH"
           xcrun simctl launch "$UDID" com.anonymous.exporepro || true
-          sleep 20
+          sleep 45
+          sed -n '1,260p' metro.log || true
           xcrun simctl spawn "$UDID" log show --last 3m --style compact --predicate 'eventMessage CONTAINS "[EL_REPRO]" OR eventMessage CONTAINS "AudioContext" OR eventMessage CONTAINS "navigator.mediaDevices" OR eventMessage CONTAINS "document.createElement" OR eventMessage CONTAINS "window.removeEventListener"' | tee simulator-elevenlabs.log
 
       - name: Upload repro logs
@@ -79,5 +88,6 @@ jobs:
           name: elevenlabs-rn-ios-repro-logs
           path: |
             xcodebuild.log
+            metro.log
             simulator-elevenlabs.log
             ios/Podfile.lock
