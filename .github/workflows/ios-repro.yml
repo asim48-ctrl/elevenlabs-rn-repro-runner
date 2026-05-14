@@ -66,6 +66,14 @@ jobs:
           sleep 20
           sed -n '1,160p' metro.log
 
+      - name: Start repro WebSocket
+        run: |
+          set -euxo pipefail
+          nohup node repro-ws-server.cjs > repro-ws-server.log 2>&1 &
+          echo $! > repro-ws-server.pid
+          sleep 3
+          sed -n '1,120p' repro-ws-server.log
+
       - name: Boot simulator and launch repro app
         run: |
           set -euxo pipefail
@@ -79,6 +87,7 @@ jobs:
           xcrun simctl launch "$UDID" com.anonymous.exporepro || true
           sleep 45
           sed -n '1,260p' metro.log || true
+          sed -n '1,260p' repro-ws-server.log || true
           xcrun simctl spawn "$UDID" log show --last 3m --style compact --predicate 'eventMessage CONTAINS "[EL_REPRO]" OR eventMessage CONTAINS "AudioContext" OR eventMessage CONTAINS "navigator.mediaDevices" OR eventMessage CONTAINS "document.createElement" OR eventMessage CONTAINS "window.removeEventListener"' | tee simulator-elevenlabs.log
 
       - name: Upload repro logs
@@ -89,5 +98,6 @@ jobs:
           path: |
             xcodebuild.log
             metro.log
+            repro-ws-server.log
             simulator-elevenlabs.log
             ios/Podfile.lock

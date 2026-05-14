@@ -17,7 +17,7 @@ export default function App() {
     append(`start ${connectionType}`);
     try {
       await Conversation.startSession({
-        agentId: 'agent_repro_placeholder',
+        signedUrl: 'ws://127.0.0.1:8799/convai',
         connectionType,
         useWakeLock: false,
         onStatusChange: (event) => append(`${connectionType} status ${JSON.stringify(event)}`),
