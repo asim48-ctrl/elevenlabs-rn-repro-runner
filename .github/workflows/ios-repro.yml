@@ -29,6 +29,19 @@ jobs:
         working-directory: ios
         run: pod install --repo-update
 
+      - name: Create iOS simulator
+        run: |
+          set -euxo pipefail
+          xcrun simctl list runtimes
+          xcrun simctl list devicetypes
+          DEVICE_TYPE="$(xcrun simctl list devicetypes | awk -F '[()]' '/iPhone 16 Pro/ { print $2; exit } /iPhone 16/ { print $2; exit } /iPhone 15/ { print $2; exit }')"
+          RUNTIME="$(xcrun simctl list runtimes | awk -F '[()]' '/iOS/ && /available/ { runtime=$2 } END { print runtime }')"
+          echo "DEVICE_TYPE=${DEVICE_TYPE}"
+          echo "RUNTIME=${RUNTIME}"
+          UDID="$(xcrun simctl create ElevenLabsRepro "$DEVICE_TYPE" "$RUNTIME")"
+          echo "SIM_UDID=${UDID}" >> "$GITHUB_ENV"
+          echo "Created simulator ${UDID}"
+
       - name: Build for iOS Simulator
         run: |
           set -euxo pipefail
@@ -37,7 +50,7 @@ jobs:
             -scheme exporepro \
             -configuration Debug \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination "platform=iOS Simulator,id=${SIM_UDID}" \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
             build | tee xcodebuild.log
@@ -45,9 +58,8 @@ jobs:
       - name: Boot simulator and launch repro app
         run: |
           set -euxo pipefail
-          DEVICE_NAME="iPhone 16"
-          UDID="$(xcrun simctl list devices available | awk -F '[()]' "/${DEVICE_NAME}/ { print \\$2; exit }")"
-          echo "Using simulator ${DEVICE_NAME} ${UDID}"
+          UDID="${SIM_UDID}"
+          echo "Using simulator ${UDID}"
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
           APP_PATH="$(find build/Build/Products/Debug-iphonesimulator -maxdepth 2 -name '*.app' | head -n 1)"
