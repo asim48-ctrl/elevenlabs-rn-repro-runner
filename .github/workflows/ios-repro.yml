@@ -2,9 +2,6 @@ name: ElevenLabs React Native iOS repro
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 permissions:
   contents: write
@@ -88,13 +85,23 @@ jobs:
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
           APP_PATH="$(find build/Build/Products/Debug-iphonesimulator -maxdepth 2 -name '*.app' | head -n 1)"
+          BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "${APP_PATH}/Info.plist")"
           echo "Installing ${APP_PATH}"
           xcrun simctl install "$UDID" "$APP_PATH"
-          xcrun simctl launch "$UDID" com.anonymous.exporepro || true
+          set +e
+          xcrun simctl spawn "$UDID" log stream --style compact --predicate 'eventMessage CONTAINS "[EL_REPRO]" OR eventMessage CONTAINS "AudioContext" OR eventMessage CONTAINS "navigator.mediaDevices" OR eventMessage CONTAINS "document.createElement" OR eventMessage CONTAINS "window.removeEventListener"' > simulator-elevenlabs.log 2>&1 &
+          LOG_PID=$!
+          xcrun simctl launch --console "$UDID" "$BUNDLE_ID" > app-launch.log 2>&1
+          LAUNCH_STATUS=$?
+          set -e
           sleep 90
+          kill "$LOG_PID" || true
+          wait "$LOG_PID" || true
+          echo "Launch status: ${LAUNCH_STATUS}" | tee -a simulator-elevenlabs.log
+          sed -n '1,260p' app-launch.log || true
           sed -n '1,260p' metro.log || true
           sed -n '1,260p' repro-ws-server.log || true
-          xcrun simctl spawn "$UDID" log show --last 4m --style compact --predicate 'eventMessage CONTAINS "[EL_REPRO]" OR eventMessage CONTAINS "AudioContext" OR eventMessage CONTAINS "navigator.mediaDevices" OR eventMessage CONTAINS "document.createElement" OR eventMessage CONTAINS "window.removeEventListener"' | tee simulator-elevenlabs.log
+          sed -n '1,260p' simulator-elevenlabs.log || true
 
       - name: Write repo-readable summary
         if: always()
@@ -120,6 +127,9 @@ jobs:
             echo "## Simulator excerpt"
             sed -n '1,220p' simulator-elevenlabs.log || true
             echo
+            echo "## App launch excerpt"
+            sed -n '1,220p' app-launch.log || true
+            echo
             echo "## Native build tail"
             tail -n 80 xcodebuild.log || true
           } > repro-results/latest-summary.md
@@ -140,5 +150,6 @@ jobs:
             metro.log
             repro-ws-server.log
             simulator-elevenlabs.log
+            app-launch.log
             repro-results/latest-summary.md
             ios/Podfile.lock
