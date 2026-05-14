@@ -1,0 +1,71 @@
+name: ElevenLabs React Native iOS repro
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ios-repro:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Show published package versions
+        run: |
+          node -p "require('@elevenlabs/react-native/package.json').version"
+          node -p "require('@elevenlabs/client/package.json').version"
+          node -p "require('@livekit/react-native/package.json').version"
+          node -p "require('livekit-client/package.json').version"
+
+      - name: Generate iOS project
+        run: npx expo prebuild --platform ios --no-install
+
+      - name: Install CocoaPods
+        working-directory: ios
+        run: pod install --repo-update
+
+      - name: Build for iOS Simulator
+        run: |
+          set -euxo pipefail
+          xcodebuild \
+            -workspace ios/exporepro.xcworkspace \
+            -scheme exporepro \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tee xcodebuild.log
+
+      - name: Boot simulator and launch repro app
+        run: |
+          set -euxo pipefail
+          DEVICE_NAME="iPhone 16"
+          UDID="$(xcrun simctl list devices available | awk -F '[()]' "/${DEVICE_NAME}/ { print \\$2; exit }")"
+          echo "Using simulator ${DEVICE_NAME} ${UDID}"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          APP_PATH="$(find build/Build/Products/Debug-iphonesimulator -maxdepth 2 -name '*.app' | head -n 1)"
+          echo "Installing ${APP_PATH}"
+          xcrun simctl install "$UDID" "$APP_PATH"
+          xcrun simctl launch "$UDID" com.anonymous.exporepro || true
+          sleep 20
+          xcrun simctl spawn "$UDID" log show --last 3m --style compact --predicate 'eventMessage CONTAINS "[EL_REPRO]" OR eventMessage CONTAINS "AudioContext" OR eventMessage CONTAINS "navigator.mediaDevices" OR eventMessage CONTAINS "document.createElement" OR eventMessage CONTAINS "window.removeEventListener"' | tee simulator-elevenlabs.log
+
+      - name: Upload repro logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elevenlabs-rn-ios-repro-logs
+          path: |
+            xcodebuild.log
+            simulator-elevenlabs.log
+            ios/Podfile.lock
