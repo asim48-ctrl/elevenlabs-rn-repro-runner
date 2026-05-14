@@ -91,7 +91,7 @@ jobs:
           set +e
           xcrun simctl spawn "$UDID" log stream --style compact --predicate 'eventMessage CONTAINS "[EL_REPRO]" OR eventMessage CONTAINS "AudioContext" OR eventMessage CONTAINS "navigator.mediaDevices" OR eventMessage CONTAINS "document.createElement" OR eventMessage CONTAINS "window.removeEventListener"' > simulator-elevenlabs.log 2>&1 &
           LOG_PID=$!
-          xcrun simctl launch --console "$UDID" "$BUNDLE_ID" > app-launch.log 2>&1
+          xcrun simctl launch "$UDID" "$BUNDLE_ID" > app-launch.log 2>&1
           LAUNCH_STATUS=$?
           set -e
           sleep 90
