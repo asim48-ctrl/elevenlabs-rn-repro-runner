@@ -20,10 +20,7 @@ jobs:
 
       - name: Show published package versions
         run: |
-          node -p "require('@elevenlabs/react-native/package.json').version"
-          node -p "require('@elevenlabs/client/package.json').version"
-          node -p "require('@livekit/react-native/package.json').version"
-          node -p "require('livekit-client/package.json').version"
+          npm ls @elevenlabs/react-native @elevenlabs/client @livekit/react-native livekit-client --depth=0
 
       - name: Generate iOS project
         run: npx expo prebuild --platform ios --no-install
