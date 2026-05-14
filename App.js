@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import '@elevenlabs/react-native';
 import { Conversation } from '@elevenlabs/client';
+import { MediaDeviceInput } from '@elevenlabs/client/dist/utils/input.js';
+import { MediaDeviceOutput } from '@elevenlabs/client/dist/utils/output.js';
 
 export default function App() {
   const [lines, setLines] = useState(['ready']);
@@ -35,10 +37,6 @@ export default function App() {
   const runMediaPath = async () => {
     append('start direct media path');
     try {
-      const [{ MediaDeviceInput }, { MediaDeviceOutput }] = await Promise.all([
-        import('@elevenlabs/client/dist/utils/input.js'),
-        import('@elevenlabs/client/dist/utils/output.js'),
-      ]);
       await Promise.all([
         MediaDeviceInput.create({
           sampleRate: 16000,
@@ -61,8 +59,7 @@ export default function App() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      run('websocket');
-      setTimeout(runMediaPath, 2500);
+      runMediaPath();
     }, 1200);
     return () => clearTimeout(timer);
   }, []);
