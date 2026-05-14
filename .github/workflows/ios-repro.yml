@@ -35,7 +35,10 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl list devicetypes
           DEVICE_TYPE="$(xcrun simctl list devicetypes | awk -F '[()]' '/iPhone 16 Pro/ { print $2; exit } /iPhone 16/ { print $2; exit } /iPhone 15/ { print $2; exit }')"
-          RUNTIME="$(xcrun simctl list runtimes | awk -F '[()]' '/iOS/ && /available/ { runtime=$2 } END { print runtime }')"
+          RUNTIME="$(xcrun simctl list runtimes | awk '/^iOS 18/ { runtime=$NF } END { print runtime }')"
+          if [ -z "$RUNTIME" ]; then
+            RUNTIME="$(xcrun simctl list runtimes | awk '/^iOS / { runtime=$NF } END { print runtime }')"
+          fi
           echo "DEVICE_TYPE=${DEVICE_TYPE}"
           echo "RUNTIME=${RUNTIME}"
           UDID="$(xcrun simctl create ElevenLabsRepro "$DEVICE_TYPE" "$RUNTIME")"
