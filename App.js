@@ -32,9 +32,37 @@ export default function App() {
     }
   };
 
+  const runMediaPath = async () => {
+    append('start direct media path');
+    try {
+      const [{ MediaDeviceInput }, { MediaDeviceOutput }] = await Promise.all([
+        import('@elevenlabs/client/dist/utils/input.js'),
+        import('@elevenlabs/client/dist/utils/output.js'),
+      ]);
+      await Promise.all([
+        MediaDeviceInput.create({
+          sampleRate: 16000,
+          format: 'pcm',
+          preferHeadphonesForIosDevices: false,
+        }),
+        MediaDeviceOutput.create({
+          sampleRate: 16000,
+          format: 'pcm',
+        }),
+      ]);
+      append('direct media path unexpectedly started');
+    } catch (error) {
+      append(`direct media path failed ${error?.message ?? String(error)}`);
+      if (error?.stack) {
+        append(`direct media path stack ${error.stack.split('\n').slice(0, 6).join(' | ')}`);
+      }
+    }
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       run('websocket');
+      setTimeout(runMediaPath, 2500);
     }, 1200);
     return () => clearTimeout(timer);
   }, []);
@@ -45,6 +73,7 @@ export default function App() {
       <View style={styles.buttons}>
         <Button title="Start WebSocket" onPress={() => run('websocket')} />
         <Button title="Start WebRTC" onPress={() => run('webrtc')} />
+        <Button title="Start Direct Media Path" onPress={runMediaPath} />
       </View>
       <ScrollView style={styles.log}>
         {lines.map((line, index) => (
