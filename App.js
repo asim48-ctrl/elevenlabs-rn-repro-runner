@@ -18,13 +18,16 @@ export default function App() {
   const run = async (connectionType) => {
     append(`start ${connectionType}`);
     try {
-      await Conversation.startSession({
-        signedUrl: 'ws://127.0.0.1:8799/convai',
-        connectionType,
-        useWakeLock: false,
-        onStatusChange: (event) => append(`${connectionType} status ${JSON.stringify(event)}`),
-        onError: (message, error) => append(`${connectionType} onError ${message} ${error?.message ?? ''}`),
-      });
+      await Promise.race([
+        Conversation.startSession({
+          signedUrl: 'ws://127.0.0.1:8799/convai',
+          connectionType,
+          useWakeLock: false,
+          onStatusChange: (event) => append(`${connectionType} status ${JSON.stringify(event)}`),
+          onError: (message, error) => append(`${connectionType} onError ${message} ${error?.message ?? ''}`),
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error(`${connectionType} timed out`)), 12000)),
+      ]);
       append(`${connectionType} unexpectedly started`);
     } catch (error) {
       append(`${connectionType} failed ${error?.message ?? String(error)}`);
@@ -59,7 +62,11 @@ export default function App() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      runMediaPath();
+      (async () => {
+        await runMediaPath();
+        await run('websocket');
+        await run('webrtc');
+      })();
     }, 1200);
     return () => clearTimeout(timer);
   }, []);
